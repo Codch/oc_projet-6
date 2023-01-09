@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const userRoutes = require('./routes/user');
+const saucesRoutes = require('./routes/sauces');
+const path = require('path');
+
 
 
 mongoose.connect('mongodb+srv://codch:DVimG.r45W3LjWx@cluster0.smsa4k4.mongodb.net/?retryWrites=true&w=majority',
@@ -20,10 +23,13 @@ mongoose.connect('mongodb+srv://codch:DVimG.r45W3LjWx@cluster0.smsa4k4.mongodb.n
 
 app.use(express.json());
 
-app.use('/api/sauces', (req, res, next) => {
-  res.status(200).json({message: 'requête reçue'})
-})
 
+// app.use('/api/sauces', (req, res, next) => {
+//   res.status(200).json({message: 'requête reçue'})
+// })
+
+app.use('/api/sauces', saucesRoutes);
 app.use('/api/auth', userRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
