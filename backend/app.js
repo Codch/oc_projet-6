@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
 const saucesRoutes = require('./routes/sauces');
 const path = require('path');
-// const helmet = require('helmet');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -25,8 +25,10 @@ mongoose.connect('mongodb+srv://codch:DVimG.r45W3LjWx@cluster0.smsa4k4.mongodb.n
 
 
 app.use(express.json());
-// app.use(helmet());
+app.use(helmet());
 
+// Autorise les requêtes de différentes origines (permet de charger les images)
+app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 
 app.use('/api/sauces', saucesRoutes);
 app.use('/api/auth', userRoutes);
