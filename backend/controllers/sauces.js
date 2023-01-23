@@ -44,6 +44,9 @@ exports.deleteSauce = (req, res, next) => {
   //On trouve l'objet dans la base de données
   Sauces.findOne({ _id: req.params.id }) 
     .then(sauce => { 
+      if (sauce.userId != req.auth.userId) {
+        res.status(401).json({ message: 'Not authorized' });
+    } else {
       //On extrait le nom du fichier à supprimer
       const filename = sauce.imageUrl.split('/images/')[1]; 
       //On supprime ce fichier (ici l'image)
@@ -53,7 +56,7 @@ exports.deleteSauce = (req, res, next) => {
           .then(() => res.status(200).json({ message: 'Sauce supprimée !'}))
           .catch(error => res.status(400).json({ error }));
       });
-    })
+    }})
     .catch(error => res.status(500).json({ error }));
 };
 

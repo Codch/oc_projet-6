@@ -1,10 +1,15 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const validator = require('email-validator');
 
 
 //Inscription d'un nouvel utilisateur
 exports.signup = (req, res, next) => {
+    // Vérification que l'adresse email soit correcte
+    if (!validator.validate(req.body.email)) {
+        return res.status(400).json({ message: "Adresse email non valide" });
+      }
     //Hachage du mot de passe
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
@@ -35,7 +40,7 @@ exports.login = (req, res, next) => {
                         userId: user._id,
                         token: jwt.sign(
                             { userId: user._id },
-                            'RANDOM_TOKEN_SECRET',
+                            process.env.JWT_SECRET,
                             { expiresIn: '24h' }
                         )
                     });
